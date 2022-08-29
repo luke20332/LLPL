@@ -17,6 +17,7 @@ The preprocessing includes:
   - Thresholding the image to a binary image. 
     - This is done to highlight just the text, reducing noise that may be picked up by the text interpreter.
 
+The first version of this uses simple thresholding, but this is not very effective, in a later method I will attempt OTSU thresholding.
 
 Then, we genereate a kernel / bounding box for the license plate.
 Here, we specify a shape and size of the kernel, which influences the size of the bounding box. This is what is overlayed on the image to read the text.

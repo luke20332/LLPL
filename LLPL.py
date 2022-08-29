@@ -1,13 +1,3 @@
-# This program is to preprocess the data set
-# testing out how to process the information
-
-# so from the data set, one by one we extract an image, then do some preprocessing:
-# 1 = Convert image to binary
-# 2 = Find the bounding box, just the license plate
-# 3 = convert image to an np array, with label stored also
-# 4 = store images in a folder
-#  
-
 import cv2 as cv
 import numpy as np
 import os
@@ -18,19 +8,11 @@ import pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\lukem\AppData\Local\Tesseract-OCR\tesseract.exe'
 
 
-DIR = r"C:\Users\lukem\Documents\projects\LLPL\sampleimages"
-
-img = cv.imread("sampleimages/2.jpg")  # small doesnt work
+img = cv.imread("sampleimages/8.jpg")  # small doesnt work
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 #cv.imshow("original", img)
 
-#print(img.shape[0], img.shape[1])
-
-# set a max image resolution that images can be, otherwise they are resized.
-
-# redone
 # resize image such that the greater out of height and width is 720, adjust other param accordingly so that ratio is preserved
-
 
 def rescaledImg(img):
   # check which is bigger out of width and height
@@ -48,38 +30,15 @@ def rescaledImg(img):
 img = rescaledImg(img)
 
 
-
-#cv.imshow("resized",img)
-
-#adaptive_thresh = cv.adaptiveThreshold(img, 255,cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 23,11)
 threshold, img = cv.threshold(img, 100, 255, cv.THRESH_BINARY)
 
 
-#decide between adaptive and simple thresholding. May just use simple right now, as it returns the image where the license plates are in bold; adaptive returns ones where the edges are outlined - may not be as helpful for the computer vision.
-# also otsu's binarisation, but ignored for now.
 
 
 #cv.imshow("Thresholded", img)
 
 # attempting to make a slideshow
 
-dir_size = 6
-
-#for i in range (0,dir_size):
-  #path = os.path.join(DIR, i)
-"""
-for image in os.listdir(DIR):
-    img_path = os.path.join(DIR, image)
-    print (img_path)
-    img_array = cv.imread(img_path)
-"""
- 
-    #img = cv.cvtColor(img_array, cv.COLOR_BGR2GRAY)
-    #img = rescaledImg(img)
-    #threshold, img = cv.threshold(img, 100, 255, cv.THRESH_BINARY)
-    #cv.imshow("image",img)
-    #time.sleep(3)
-   
 
 
 # Getting the boundary box
@@ -102,9 +61,10 @@ kernel = cv.getStructuringElement(cv.MORPH_RECT, (20,20))
 
 contours, hierarchy = cv.findContours(img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
 
-print(contours)
 
 img2 = img.copy()
+
+cv.imshow("img2", img2)
 
 # create an empty text file to write to
 file = open("Interpreted text", "w+")
@@ -113,24 +73,30 @@ file.close()
 
 # then we loop through the contours list, passing it to pytesseract to identify any characters or blocks of text in the image. this is then written to the file.
 
-for i in contours:
-  x, y, w, h = cv.boundingRect(i)
+def findText():
+  for i in contours:
+    x, y, w, h = cv.boundingRect(i)
 
-  #overlay a rectangle
-  rect = cv.rectangle(img2, (x,y),(x+w, y+h), (0,0,255), 2)
+    #overlay a rectangle
+    rect = cv.rectangle(img2, (x,y),(x+w, y+h), (0,0,255), 2)
 
-  cropped = img2[y:y+h, x:x+w]
+    cropped = img2[y:y+h, x:x+w]
 
-  #cv.imshow("cropped",cropped)
+    #cv.imshow("cropped",cropped)
 
-  file = open ("Interpreted text", "a")
+    file = open ("Interpreted text", "a")
 
-  text = pytesseract.image_to_string(cropped)
-  #text = "hello"
+    text = pytesseract.image_to_string(cropped)
+    #text = "hello"
 
-  file.write(text)
-  #file.write("\n")
+    file.write(text)
+    #file.write("\n")
+    print("searching...")
+    file.close 
 
-  file.close 
+findText()
 
+print(len(contours))
+
+print("finished with search")
 cv.waitKey(0)
