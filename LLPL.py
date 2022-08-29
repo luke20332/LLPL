@@ -20,7 +20,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Users\lukem\AppData\Local\Tesseract
 
 DIR = r"C:\Users\lukem\Documents\projects\LLPL\sampleimages"
 
-img = cv.imread("sampleimages/6.jpg")  # small doesnt work
+img = cv.imread("sampleimages/2.jpg")  # small doesnt work
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 #cv.imshow("original", img)
 
@@ -59,7 +59,7 @@ threshold, img = cv.threshold(img, 100, 255, cv.THRESH_BINARY)
 # also otsu's binarisation, but ignored for now.
 
 
-cv.imshow("Thresholded", img)
+#cv.imshow("Thresholded", img)
 
 # attempting to make a slideshow
 
@@ -121,7 +121,7 @@ for i in contours:
 
   cropped = img2[y:y+h, x:x+w]
 
-  cv.imshow("cropped",cropped)
+  #cv.imshow("cropped",cropped)
 
   file = open ("Interpreted text", "a")
 
@@ -129,7 +129,7 @@ for i in contours:
   #text = "hello"
 
   file.write(text)
-  file.write("\n")
+  #file.write("\n")
 
   file.close 
 
