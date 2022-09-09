@@ -8,7 +8,7 @@ import pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\lukem\AppData\Local\Tesseract-OCR\tesseract.exe'
 
 
-img = cv.imread("sampleimages/1.jpg")  # small doesnt work
+img = cv.imread("C:/users/lukem/documents/projects/LLPL/sampleimages/tired.jpg")  # small doesnt work
 
 #convert to greyscale
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -72,6 +72,7 @@ file.close()
 
 # then we loop through the contours list, passing it to pytesseract to identify any characters or blocks of text in the image. this is then written to the file.
 
+foundtext = "no text found"
 
 def findText():
   for i in contours:
@@ -90,16 +91,18 @@ def findText():
     #text = "hello"
 
     print(text)
+    foundtext = text
 
     file.write(text)
     #file.write("\n")
     print("searching...")
     file.close 
 
+print(foundtext)
 
 #findText()
 
-print(len(contours))
+#print(len(contours))
 
-print("finished with search")
+#print("finished with search")
 cv.waitKey(0)

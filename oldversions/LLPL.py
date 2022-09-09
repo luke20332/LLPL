@@ -115,7 +115,7 @@ def findText():
 
 findText()
 
-print(len(contours))
+#print(len(contours))
 
-print("finished with search")
+#print("finished with search")
 cv.waitKey(0)

@@ -20,7 +20,7 @@ def rescaledImg(img):
   return cv.resize(img, dimensions, interpolation = cv.INTER_AREA) # return the resized image
 
 
-img = cv.imread("sampleimages/1.jpg")  # Load in our image
+img = cv.imread("sampleimages/3.jpg")  # Load in our image
 
 #img = imutils.resize(img, width=300)
 
@@ -70,6 +70,7 @@ img2 = img.copy()
 cv.drawContours(img2, contours, -1,(0,0,255), 3) # overlay the 30 largest on the image
 #cv.imshow("Top 30 contours", img2)
 
+cv.imshow("final image",img2)
 
 # Finding the license plate region
 # The general idea behind this part is for every contour, 
@@ -102,7 +103,8 @@ cv.imshow("license plate", img)
 lpPath = './7.png'
 croppedLp = cv.imread(lpPath)
 cv.imshow("cropped license plate", croppedLp)
-plateText = pytesseract.image_to_string(lpPath)
+#plateText = pytesseract.image_to_string(lpPath)
+plateText = pytesseract.image_to_string(img, config='--psm 6')
 print("plate number is")
 print(plateText)
 
