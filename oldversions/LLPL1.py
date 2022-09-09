@@ -97,7 +97,7 @@ def findText():
     file.close 
 
 
-findText()
+#findText()
 
 print(len(contours))
 
