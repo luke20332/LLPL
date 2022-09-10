@@ -1,10 +1,16 @@
+# 4th version of the license plate recogniser
+# instead using easy ocr instead of pytesseract.
+# pytesseract rarely worked, this works majority of the time 
+
+
 import cv2 as cv
 from matplotlib import pyplot as plt
 import numpy as np
 import imutils
 import easyocr
 
-img = cv.imread('sampleimages/9.jpg')
+img = cv.imread('sampleimages/15.jpg')
+
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
 
@@ -44,6 +50,7 @@ plt.imshow(cv.cvtColor(new_image, cv.COLOR_BGR2RGB))
 cropped_image = gray[x1:x2+1, y1:y2+1]
 
 plt.imshow(cv.cvtColor(cropped_image, cv.COLOR_BGR2RGB))
+plt.show()
 
 reader = easyocr.Reader(['en'])
 result = reader.readtext(cropped_image)

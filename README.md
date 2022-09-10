@@ -25,3 +25,14 @@ Here, we specify a shape and size of the kernel, which influences the size of th
 Contours within the image are found. We pass in the image, and the openCV method 'findContours' will return a numpy array of all locations of a 'contour'.
 
 Finally, using tesseract, we draw a box over each set of contours and find the license plate number.
+
+
+
+
+Update - Version 0.4
+
+After attempting to read license plates with tesseract, it appears as through tesseract does not have a very good success rate for the configuration that I had been using, possibly a problem on my behalf.
+
+Therefore, I decided to use easyocr, another python package that reads text using machine learning. This was aided with a tutorial, and license plates were able to be recognised a lot more often.
+As a result I will be going along with this package.
+
