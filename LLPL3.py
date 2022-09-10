@@ -9,7 +9,13 @@ import numpy as np
 import imutils
 import easyocr
 
-img = cv.imread('sampleimages/15.jpg')
+#opencv reads in images as bgr, whereas plt reads as rgb, so the colours on the image are difference
+
+img = cv.imread('sampleimages/16.jpg')
+#cv.imshow("img", img)
+adjustimg = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+plt.imshow(adjustimg)
+plt.show()
 
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
