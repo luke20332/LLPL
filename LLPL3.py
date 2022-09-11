@@ -9,6 +9,7 @@ import imutils
 import easyocr
 import requests
 
+#text = "empty"
 #opencv reads in images as bgr, whereas plt reads as rgb, so the colours on the image are difference
 
 img = cv.imread('sampleimages/image4.jpg')
@@ -84,8 +85,9 @@ def preProcess(img):
 
   # the results of reader.readtext is a list, with the 4 coordinates of the text box, the text that was found, and the confidence level the system has in its result.
 
-
+  global text # define global variable from inside a function
   text = result[0][-2]
+
   print("The License plate is {}".format(text))
   font = cv.FONT_HERSHEY_SIMPLEX
   res = cv.putText(img, text = text, org = (approx[0][0][0], approx[1][0][1]+60), fontFace=font, fontScale=1, color=(0,255,0), thickness=2, lineType=cv.LINE_AA)
@@ -93,17 +95,18 @@ def preProcess(img):
   plt.imshow(cv.cvtColor(res, cv.COLOR_BGR2RGB))
 
   plt.show()
+  #return text
 
-#preProcess()
+preProcess(img)
 
 
 # Now that we have deciphered the license plate from the image, we can now plug that into rate-driver to get the reviews, however, we cannot have spaces in the url
 # .replace will not change the original variable, need to assign the value of the function to a different variable
-text = "H982 FKL"
+#text = "H982 FKL"
 
 
-text123 = text.replace(" ", "")
-print(text123)
+plateText = text.replace(" ", "")
+print(plateText)
 
 # get the site's HTML code into python to interact with it
 
@@ -111,11 +114,16 @@ print(text123)
 
 
 def getReviews(plate):
+
+  headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36'}
+
   URL = "https://rate-driver.co.uk/{}".format(plate)
-  page = requests.get(URL)
-  print (URL)
-  print(page.text)
+  #URL = "https://rate-driver.co.uk/H982FKL"
+  page = requests.get(URL, headers = headers)
+  print ("Acessing {} ...".format(URL))
+  #print(page.text)
 
 
-getReviews(text123)
+#getReviews(plateText)
 
+#
