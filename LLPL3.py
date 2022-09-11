@@ -8,6 +8,7 @@ import numpy as np
 import imutils
 import easyocr
 import requests
+from bs4 import BeautifulSoup
 
 #text = "empty"
 #opencv reads in images as bgr, whereas plt reads as rgb, so the colours on the image are difference
@@ -15,9 +16,12 @@ import requests
 img = cv.imread('sampleimages/image4.jpg')
 
 def preProcess(img):
+
+  print("--- Performing Preprocessing ---")
+
   adjustimg = cv.cvtColor(img, cv.COLOR_BGR2RGB)
   plt.imshow(adjustimg)
-  plt.show()
+  #plt.show()
 
   gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
@@ -30,7 +34,7 @@ def preProcess(img):
   edged = cv.Canny(bfilter, 30, 200) 
 
   plt.imshow(cv.cvtColor(edged, cv.COLOR_BGR2RGB))
-  plt.show()
+  #plt.show()
 
   # find contours and apply mask
   # we use findContours, passing in a copy of the edge image, and return a list of all contours in the imge, with retr_tree. - retrieval method
@@ -65,7 +69,7 @@ def preProcess(img):
   new_image = cv.bitwise_and(img, img, mask=mask)
 
   plt.imshow(cv.cvtColor(new_image, cv.COLOR_BGR2RGB))
-  plt.show()
+  #plt.show()
 
   # then we create (x,y), a list of coordinates, where the mask is transparent (LP)
   # x1,y1 is the beginning of the rectangle
@@ -76,7 +80,7 @@ def preProcess(img):
   cropped_image = gray[x1:x2+1, y1:y2+1]
 
   plt.imshow(cv.cvtColor(cropped_image, cv.COLOR_BGR2RGB))
-  plt.show()
+  #plt.show()
 
   # reader var is an object which performs easyocr operations on the image
   reader = easyocr.Reader(['en'])
@@ -116,14 +120,48 @@ print(plateText)
 def getReviews(plate):
 
   headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36'}
+  # headers is a map sent to the web server to we dont get blacklisted, some websites will identify the python web agent and auto block
 
-  URL = "https://rate-driver.co.uk/{}".format(plate)
+  URL = "https://rate-driver.co.uk/{}".format(plate) #
   #URL = "https://rate-driver.co.uk/H982FKL"
-  page = requests.get(URL, headers = headers)
-  print ("Acessing {} ...".format(URL))
+  page = requests.get(URL, headers = headers) # HTTP GET request the web page from the web server, keeping the header in, This is stored in a python object.
+  print ("Accessing {} ...".format(URL))
   #print(page.text)
 
+  # Use Beautiful Soup to parse HTML code more efficiently.
 
-#getReviews(plateText)
+  soup = BeautifulSoup(page.content, "html.parser") # content, not text, to parse raw bytes.
+
+
+  # this line with find the h3 tag that is named Comments, and return the next div. This is the first comment of the page.
+  results = soup.find(lambda tag: tag.name == "h3" and "Comments" in tag.text).find_next("div")
+
+  #this line finds all divs where the class name is 'comment' indicating we have a comment. returns an iterable containing all the HTML for all the comments on this page.
+  comments = soup.findAll("div", class_ = "comment")
+  
+  for comment in comments:
+    author = comment.find("span", itemprop = "author")
+    if author: # keep for now, but in future, if empty, author = empty
+      print(author.text.strip())
+    else:
+      print("ANONYMOUS USER")
+    comText = comment.find("span", itemprop="text")
+    #print(author.text) #.text strips the attributes
+    print("{} \n ".format(comText.text.strip()) )
+    print()
+    
+
+
+
+
+
+
+  #print(results0.prettify()) # easier viewing 
+
+  
+
+
+
+getReviews(plateText)
 
 #
