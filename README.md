@@ -39,7 +39,7 @@ Looking up the plate:
 Once a plate has been detected, the Requests library is used to find the plate's entry on rate-driver.co.uk
 From there, BeautifulSoup returns the comments found on that entry, as well as the author's display name.
 
-![examplecomments](https://user-images.githubusercontent.com/78817201/189750663-5b7bf8ec-e854-4f78-8e38-c6e3754b16a9.JPG)
+![examplecomments](https://user-images.githubusercontent.com/78817201/189750866-254e994c-eac4-4de4-9c51-0bfd381ca64f.JPG)
 
 
 Sentiment Analysis.
