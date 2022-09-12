@@ -12,8 +12,11 @@ from bs4 import BeautifulSoup
 
 #text = "empty"
 #opencv reads in images as bgr, whereas plt reads as rgb, so the colours on the image are difference
+# working examples:
+# image4.jpg is H892 FKL
+# inbetweeners 4
 
-img = cv.imread('sampleimages/image4.jpg')
+img = cv.imread('sampleimages/mrbean1edit.jpg')
 
 def preProcess(img):
 
@@ -80,7 +83,7 @@ def preProcess(img):
   cropped_image = gray[x1:x2+1, y1:y2+1]
 
   plt.imshow(cv.cvtColor(cropped_image, cv.COLOR_BGR2RGB))
-  #plt.show()
+  plt.show()
 
   # reader var is an object which performs easyocr operations on the image
   reader = easyocr.Reader(['en'])
@@ -107,22 +110,23 @@ preProcess(img)
 # Now that we have deciphered the license plate from the image, we can now plug that into rate-driver to get the reviews, however, we cannot have spaces in the url
 # .replace will not change the original variable, need to assign the value of the function to a different variable
 #text = "H982 FKL"
-
-
 plateText = text.replace(" ", "")
-print(plateText)
+
 
 # get the site's HTML code into python to interact with it
 
 
-
-
 def getReviews(plate):
+
+  #allcomments is a list of dictionaries for all comments on the forum.
+  global allComments
+  allComments = []
 
   headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36'}
   # headers is a map sent to the web server to we dont get blacklisted, some websites will identify the python web agent and auto block
 
   URL = "https://rate-driver.co.uk/{}".format(plate) #
+  print(URL)
   #URL = "https://rate-driver.co.uk/H982FKL"
   page = requests.get(URL, headers = headers) # HTTP GET request the web page from the web server, keeping the header in, This is stored in a python object.
   print ("Accessing {} ...".format(URL))
@@ -134,34 +138,45 @@ def getReviews(plate):
 
 
   # this line with find the h3 tag that is named Comments, and return the next div. This is the first comment of the page.
-  results = soup.find(lambda tag: tag.name == "h3" and "Comments" in tag.text).find_next("div")
+  #results = soup.find(lambda tag: tag.name == "h3" and "Comments" in tag.text).find_next("div")
 
   #this line finds all divs where the class name is 'comment' indicating we have a comment. returns an iterable containing all the HTML for all the comments on this page.
   comments = soup.findAll("div", class_ = "comment")
   
   for comment in comments:
+
     author = comment.find("span", itemprop = "author")
-    if author: # keep for now, but in future, if empty, author = empty
-      print(author.text.strip())
-    else:
-      print("ANONYMOUS USER")
     comText = comment.find("span", itemprop="text")
+
     #print(author.text) #.text strips the attributes
-    print("{} \n ".format(comText.text.strip()) )
-    print()
+    #print("{} \n ".format(comText.text.strip()) )
+    #print()
     
+    comDict = {
+      "author" : author.text.strip(),
+      "comment" : comText.text.strip(),
+       #rating
+    }
+
+    allComments.append(comDict)
 
 
-
+  #print(allComments)
 
 
 
   #print(results0.prettify()) # easier viewing 
 
-  
-
-
-
 getReviews(plateText)
 
-#
+
+
+def returnxComments():
+  number = int(input("How many comments would you like to see? "))
+  # do a check here if number > len(allComments)
+  for x in range (number):
+    print("Author: {}".format(allComments[x]["author"]))
+    print("Comment: {}".format(allComments[x]["comment"]))
+    print()
+
+returnxComments()
