@@ -31,10 +31,16 @@ After attempting to read license plates with tesseract, it appears as through te
 
 Therefore, I decided to use Easyocr, another python package that reads text using machine learning. This was aided with a tutorial, and license plates were able to be recognised a lot more often, given that the image is sufficiently clear.
 
+![image](https://user-images.githubusercontent.com/78817201/189749208-c53aaae1-dc26-48e6-8c68-2f86d7e15062.png)
+
+
 Looking up the plate:
 
 Once a plate has been detected, the Requests library is used to find the plate's entry on rate-driver.co.uk
 From there, BeautifulSoup returns the comments found on that entry, as well as the author's display name.
+
+![examplecomments](https://user-images.githubusercontent.com/78817201/189750663-5b7bf8ec-e854-4f78-8e38-c6e3754b16a9.JPG)
+
 
 Sentiment Analysis.
 
