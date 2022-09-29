@@ -9,6 +9,8 @@ import imutils
 import easyocr
 import requests
 from bs4 import BeautifulSoup
+from textblob import TextBlob
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 #text = "empty"
 #opencv reads in images as bgr, whereas plt reads as rgb, so the colours on the image are difference
@@ -118,9 +120,12 @@ plateText = text.replace(" ", "")
 
 def getReviews(plate):
 
-  #allcomments is a list of dictionaries for all comments on the forum.
+  #allcomments is a list of dictionaries for all comments on the forum. in form author:comment
   global allComments
   allComments = []
+
+  global commentText # array of strings of all comments
+  commentText = []
 
   headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36'}
   # headers is a map sent to the web server to we dont get blacklisted, some websites will identify the python web agent and auto block
@@ -147,6 +152,7 @@ def getReviews(plate):
 
     author = comment.find("span", itemprop = "author")
     comText = comment.find("span", itemprop="text")
+    commentText.append(comText.text.strip())
 
     #print(author.text) #.text strips the attributes
     #print("{} \n ".format(comText.text.strip()) )
@@ -162,6 +168,13 @@ def getReviews(plate):
 
 
   #print(allComments)
+
+  commentText = ' '.join(commentText)
+   
+  # bit shoddy, but the above method convers the previous commentText (an array of strings) into a single string of every comment on the website.
+
+
+  #print(commentText) 
 
 
 
@@ -180,3 +193,35 @@ def returnxComments():
     print()
 
 returnxComments()
+
+print(" --- Performing sentiment analysis of comments --- ")
+
+def sentiment():
+  # convert commentsText into either a vadersentiment object or a textblob object. Could do a combo of both later on.
+  print("hello")
+
+  analyzer = SentimentIntensityAnalyzer()
+
+  vs = analyzer.polarity_scores(commentText)
+
+  #print(vs)
+
+  # ideally, we would like to use the given compound measure as our unidimensional measure of sentiment.
+  # for the mr bean example, we have a compounded sentiment of -0.9723 = very negative.
+
+  #fix this
+
+  global sentScore
+  if vs['compound'] <= -0.5:
+    sentScore = "strongly negative"
+  if vs['compound'] <= 0 and vs['compound'] > 0.5:
+    sentScore = "negative"
+  if vs['compound'] <= 0.5 and vs['compound'] > 0:
+    sentScore = "positive"
+  else:
+    sentScore = "negative"
+
+  print ("After examining the comments for {}, we concluded that the overall user sentiment is {}".format(text,sentScore))
+
+
+sentiment()
