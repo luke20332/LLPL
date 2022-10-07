@@ -44,5 +44,9 @@ From there, BeautifulSoup returns the comments found on that entry, as well as t
 
 Sentiment Analysis.
 
-Currently a work in progress, however I plan to use a natural language processing library to determine the general sentiment of the comments on the plate's entry. This coupled with comment rankings can provide the user with a good idea of the behaviour of this driver.
+Within the project, I am using the natural language processing library VaderSentiment to determine the general sentiment of the comments on the plate's entry. This coupled with comment rankings can provide the user with a good idea of the behaviour of this driver.
+(This is albiet rather skewed due to the biased nature of the website's comments. It is very rare, if at all that a user will comment upon a user's driving praising their abilities).
+
+
+![image](https://user-images.githubusercontent.com/78817201/194561136-39a224c5-4942-49da-ad3f-c11a7b226feb.png)
 
