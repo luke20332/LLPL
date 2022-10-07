@@ -198,7 +198,7 @@ print(" --- Performing sentiment analysis of comments --- ")
 
 def sentiment():
   # convert commentsText into either a vadersentiment object or a textblob object. Could do a combo of both later on.
-  print("hello")
+
 
   analyzer = SentimentIntensityAnalyzer()
 
@@ -211,13 +211,15 @@ def sentiment():
 
   #fix this
 
+  print(vs["compound"])
+
   global sentScore
-  if vs['compound'] <= -0.5:
-    sentScore = "strongly negative"
   if vs['compound'] <= 0 and vs['compound'] > 0.5:
     sentScore = "negative"
   if vs['compound'] <= 0.5 and vs['compound'] > 0:
     sentScore = "positive"
+  if vs['compound'] <= -0.5:
+    sentScore = "strongly negative"
   else:
     sentScore = "negative"
 
